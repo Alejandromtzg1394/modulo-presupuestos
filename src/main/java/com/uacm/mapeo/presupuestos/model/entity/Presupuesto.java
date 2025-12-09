@@ -4,7 +4,7 @@ import com.uacm.mapeo.presupuestos.model.enums.EstadoPresupuesto;
 import com.uacm.mapeo.presupuestos.model.enums.Moneda;
 import jakarta.persistence.*;
 import lombok.Data;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "presupuesto")
@@ -16,10 +16,11 @@ public class Presupuesto {
     @Column(name = "id_presupuesto")
     private Long idPresupuesto;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_proyecto", nullable = false)
     private Proyecto proyecto;
 
+    // CORRECCIÓN: QUITA precision y scale
     @Column(name = "monto_aprobado", nullable = false)
     private Double montoAprobado;
 
@@ -28,7 +29,7 @@ public class Presupuesto {
     private Moneda moneda;
 
     @Column(name = "fecha_aprobacion")
-    private LocalDate fechaAprobacion;
+    private LocalDateTime fechaAprobacion;
 
     @Column(name = "version", nullable = false)
     private Integer version;
@@ -41,19 +42,19 @@ public class Presupuesto {
     private String comentarios;
 
     @Column(name = "fecha_creacion", nullable = false)
-    private LocalDate fechaCreacion = LocalDate.now();
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
 
     @Column(name = "usuario_creacion", length = 100)
     private String usuarioCreacion;
 
     @Column(name = "fecha_modificacion")
-    private LocalDate fechaModificacion;
+    private LocalDateTime fechaModificacion;
 
     @Column(name = "usuario_modificacion", length = 100)
     private String usuarioModificacion;
 
     @PreUpdate
     protected void onUpdate() {
-        this.fechaModificacion = LocalDate.now();
+        this.fechaModificacion = LocalDateTime.now();
     }
 }

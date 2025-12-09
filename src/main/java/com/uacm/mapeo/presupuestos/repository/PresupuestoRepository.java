@@ -1,4 +1,3 @@
-// src/main/java/com/uacm/mapeo/presupuestos/repository/PresupuestoRepository.java
 package com.uacm.mapeo.presupuestos.repository;
 
 import com.uacm.mapeo.presupuestos.model.entity.Presupuesto;
@@ -13,15 +12,26 @@ import java.util.Optional;
 @Repository
 public interface PresupuestoRepository extends JpaRepository<Presupuesto, Long> {
 
+    // Métodos básicos
     List<Presupuesto> findByProyectoIdProyecto(Long idProyecto);
 
-    List<Presupuesto> findByEstado(EstadoPresupuesto estado);
-
-    @Query("SELECT p FROM Presupuesto p WHERE p.proyecto.cliente.idCliente = :idCliente")
+    @Query("SELECT p FROM Presupuesto p JOIN p.proyecto pro WHERE pro.cliente.idCliente = :idCliente")
     List<Presupuesto> findByClienteId(@Param("idCliente") Long idCliente);
+
+    // MÉTODO FALTANTE - Agrégalo:
+    @Query("SELECT p FROM Presupuesto p WHERE " +
+            "(:idProyecto IS NULL OR p.proyecto.idProyecto = :idProyecto) AND " +
+            "(:idCliente IS NULL OR p.proyecto.cliente.idCliente = :idCliente) AND " +
+            "(:estado IS NULL OR p.estado = :estado)")
+    List<Presupuesto> findByFiltros(
+            @Param("idProyecto") Long idProyecto,
+            @Param("idCliente") Long idCliente,
+            @Param("estado") EstadoPresupuesto estado);
+
+    @Query("SELECT COALESCE(MAX(p.version), 0) FROM Presupuesto p WHERE p.proyecto.idProyecto = :idProyecto")
+    Integer findMaxVersionByProyectoId(@Param("idProyecto") Long idProyecto);
 
     Optional<Presupuesto> findByProyectoIdProyectoAndEstado(Long idProyecto, EstadoPresupuesto estado);
 
-    @Query("SELECT MAX(p.version) FROM Presupuesto p WHERE p.proyecto.idProyecto = :proyectoId")
-    Integer findMaxVersionByProyectoId(@Param("proyectoId") Long proyectoId);
+    boolean existsByProyectoIdProyecto(Long idProyecto);
 }
