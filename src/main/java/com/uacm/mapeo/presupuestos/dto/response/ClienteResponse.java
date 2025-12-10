@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClienteResponse {
-    private Long idCliente;
+    private Integer idCliente;
     private String nombre;
     private String direccion;
     private String telefono;

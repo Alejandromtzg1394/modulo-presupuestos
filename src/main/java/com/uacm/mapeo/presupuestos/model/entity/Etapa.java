@@ -1,3 +1,4 @@
+
 // src/main/java/com/uacm/mapeo/presupuestos/model/entity/Etapa.java
 package com.uacm.mapeo.presupuestos.model.entity;
 
@@ -13,14 +14,11 @@ public class Etapa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_etapa")
-    private Long idEtapa;
+    private Integer idEtapa;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cronograma", nullable = false)
     private Cronograma cronograma;
-
-    @Column(name = "nombre", length = 150, nullable = false)
-    private String nombre;
 
     @Column(name = "descripcion", columnDefinition = "TEXT")
     private String descripcion;
@@ -35,11 +33,12 @@ public class Etapa {
     private LocalDate fechaFinReal;
 
     @Column(name = "costo_estimado")
-    private Double costoEstimado;
+    private Double costoEstimado;  // Cambiado a Double
 
     @Column(name = "costo_real")
-    private Double costoReal;
+    private Double costoReal;      // Cambiado a Double
 
     @Column(name = "porcentaje_avance")
-    private Integer porcentajeAvance;
+    private Integer porcentajeAvance; // 0-100
+
 }

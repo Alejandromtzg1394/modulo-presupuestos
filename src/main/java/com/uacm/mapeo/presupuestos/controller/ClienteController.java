@@ -26,7 +26,7 @@ public class ClienteController {
 
     // GET: OK
     @GetMapping("/{id}")
-    public ResponseEntity<ClienteResponse> obtenerClientePorId(@PathVariable Long id) {
+    public ResponseEntity<ClienteResponse> obtenerClientePorId(@PathVariable Integer id) {
         return clienteService.obtenerClientePorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -43,7 +43,7 @@ public class ClienteController {
     // PUT: OK
     @PutMapping("/{id}")
     public ResponseEntity<ClienteResponse> actualizarCliente(
-            @PathVariable Long id,
+            @PathVariable Integer id,
             @Valid @RequestBody ClienteRequest request) {
         ClienteResponse response = clienteService.actualizarCliente(id, request);
         return ResponseEntity.ok(response);
@@ -51,7 +51,7 @@ public class ClienteController {
 
     // DELETE: OK
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarCliente(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminarCliente(@PathVariable Integer id) {
         clienteService.eliminarCliente(id);
         return ResponseEntity.noContent().build();
     }

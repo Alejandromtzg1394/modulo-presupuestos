@@ -14,15 +14,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PresupuestoResponse {
-    private Long idPresupuesto;
+    private Integer idPresupuesto;
 
     // Datos del Proyecto
-    private Long idProyecto;
+    private Integer idProyecto;
     private String nombreProyecto;
     private String estadoProyecto;
 
     // Datos del Cliente
-    private Long idCliente;
+    private Integer idCliente;
     private String nombreCliente;
     private String rfcCliente;
 

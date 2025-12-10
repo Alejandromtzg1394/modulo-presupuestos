@@ -14,7 +14,7 @@ public class Presupuesto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_presupuesto")
-    private Long idPresupuesto;
+    private  Integer idPresupuesto;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_proyecto", nullable = false)

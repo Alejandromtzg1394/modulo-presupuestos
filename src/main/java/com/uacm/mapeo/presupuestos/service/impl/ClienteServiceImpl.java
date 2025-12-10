@@ -46,13 +46,13 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public Optional<ClienteResponse> obtenerClientePorId(Long id) {
+    public Optional<ClienteResponse> obtenerClientePorId(Integer id) {
         return clienteRepository.findById(id)
                 .map(this::convertirAResponse);
     }
 
     @Override
-    public ClienteResponse actualizarCliente(Long id, ClienteRequest request) {
+    public ClienteResponse actualizarCliente(Integer id, ClienteRequest request) {
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + id));
 
@@ -70,7 +70,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public void eliminarCliente(Long id) {
+    public void eliminarCliente(Integer id) {
         clienteRepository.deleteById(id);
     }
 

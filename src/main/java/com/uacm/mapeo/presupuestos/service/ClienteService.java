@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface ClienteService {
     ClienteResponse crearCliente(@Valid ClienteRequest request);
     List<ClienteResponse> obtenerTodosClientes();
-    Optional<ClienteResponse> obtenerClientePorId(Long id);
-    ClienteResponse actualizarCliente(Long id, ClienteRequest request);
-    void eliminarCliente(Long id);
+    Optional<ClienteResponse> obtenerClientePorId(Integer id);
+    ClienteResponse actualizarCliente(Integer id, ClienteRequest request);
+    void eliminarCliente(Integer id);
 }

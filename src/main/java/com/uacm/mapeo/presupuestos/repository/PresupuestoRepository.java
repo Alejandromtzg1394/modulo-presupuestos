@@ -30,8 +30,4 @@ public interface PresupuestoRepository extends JpaRepository<Presupuesto, Long> 
 
     @Query("SELECT COALESCE(MAX(p.version), 0) FROM Presupuesto p WHERE p.proyecto.idProyecto = :idProyecto")
     Integer findMaxVersionByProyectoId(@Param("idProyecto") Long idProyecto);
-
-    Optional<Presupuesto> findByProyectoIdProyectoAndEstado(Long idProyecto, EstadoPresupuesto estado);
-
-    boolean existsByProyectoIdProyecto(Long idProyecto);
 }

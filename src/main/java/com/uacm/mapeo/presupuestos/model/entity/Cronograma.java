@@ -14,7 +14,8 @@ public class Cronograma {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_cronograma")
-    private Long idCronograma;
+    private Integer id;
+    //private  Integer idCronograma;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_proyecto", nullable = false)
@@ -31,4 +32,6 @@ public class Cronograma {
 
     @OneToMany(mappedBy = "cronograma", cascade = CascadeType.ALL)
     private List<Etapa> etapas;
+
+
 }
