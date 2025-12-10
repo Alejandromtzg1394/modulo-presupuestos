@@ -12,7 +12,10 @@ import com.uacm.mapeo.presupuestos.service.PresupuestoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -162,24 +165,100 @@ public class PresupuestoServiceImpl implements PresupuestoService {
 
 
 
-    // Agrega estos métodos al final de tu PresupuestoServiceImpl.java
+    // Alejandro
+
+    private boolean esUsuarioAdministrador(String usuario) {
+
+        return usuario.equalsIgnoreCase("alejandro.mtz");
+    }
 
     @Override
     public PresupuestoResponse aprobarPresupuesto(Long id, String usuarioAprobador) {
-        // Implementación básica - la completaremos después
-        throw new UnsupportedOperationException("Método no implementado aún");
+
+        // 1. Buscar presupuesto
+        Presupuesto presupuesto = presupuestoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Presupuesto no encontrado con ID: " + id));
+
+        // 2. Validar que el usuario sea administrador
+        if (!esUsuarioAdministrador(usuarioAprobador)) {
+            throw new RuntimeException("El usuario no tiene permisos para aprobar presupuestos");
+        }
+
+        // 3. Validar que el estado sea BORRADOR
+        if (presupuesto.getEstado() != EstadoPresupuesto.BORRADOR) {
+            throw new RuntimeException("Solo los presupuestos en estado BORRADOR pueden aprobarse");
+        }
+
+        // 4. Actualizar estado y metadatos
+        presupuesto.setEstado(EstadoPresupuesto.APROBADO);
+        presupuesto.setFechaAprobacion(LocalDateTime.now());
+        presupuesto.setUsuarioModificacion(usuarioAprobador);
+        presupuesto.setFechaModificacion(LocalDateTime.now());
+
+        // 5. Guardar
+        presupuesto = presupuestoRepository.save(presupuesto);
+
+        // 6. Convertir a response
+        return convertirAResponseConDetalles(presupuesto);
+    }
+
+
+    @Override
+    public PresupuestoResponse rechazarPresupuesto(Long id, String usuario, String motivo) {
+
+        Presupuesto presupuesto = presupuestoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Presupuesto no encontrado con ID: " + id));
+
+        if (motivo == null || motivo.trim().isEmpty()) {
+            throw new RuntimeException("Debe proporcionar un motivo para rechazar el presupuesto");
+        }
+
+        if (presupuesto.getEstado() != EstadoPresupuesto.BORRADOR &&
+                presupuesto.getEstado() != EstadoPresupuesto.APROBADO) {
+            throw new RuntimeException("Solo los presupuestos en estado BORRADOR o APROBADO pueden rechazarse");
+        }
+
+        presupuesto.setEstado(EstadoPresupuesto.RECHAZADO);
+
+        // Guardamos el motivo en 'comentarios' (sin necesidad de cambiar la entidad)
+        String comentarioActual = presupuesto.getComentarios() == null ? "" : presupuesto.getComentarios() + "\n";
+        comentarioActual += "Motivo de rechazo (por " + usuario + "): " + motivo;
+        presupuesto.setComentarios(comentarioActual);
+
+        // Actualizamos usuario y fecha de modificación
+        presupuesto.setUsuarioModificacion(usuario);
+        presupuesto.setFechaModificacion(LocalDateTime.now());
+
+        presupuesto = presupuestoRepository.save(presupuesto);
+
+        return convertirAResponseConDetalles(presupuesto);
     }
 
     @Override
-    public PresupuestoResponse rechazarPresupuesto(Long id, String motivo) {
-        // Implementación básica - la completaremos después
-        throw new UnsupportedOperationException("Método no implementado aún");
+    public PresupuestoResponse cerrarPresupuesto(Long id, String usuario) {
+
+        Presupuesto presupuesto = presupuestoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Presupuesto no encontrado con ID: " + id));
+
+        if (presupuesto.getEstado() != EstadoPresupuesto.APROBADO) {
+            throw new RuntimeException("Solo los presupuestos en estado APROBADO pueden cerrarse");
+        }
+
+        presupuesto.setEstado(EstadoPresupuesto.CERRADO);
+
+        // Opcional: añadir un comentario indicando quién cerró el presupuesto
+        String comentarioActual = presupuesto.getComentarios() == null ? "" : presupuesto.getComentarios() + "\n";
+        comentarioActual += "Cerrado por: " + usuario + " en " + LocalDateTime.now();
+        presupuesto.setComentarios(comentarioActual);
+
+        // Actualizamos usuario y fecha de modificación
+        presupuesto.setUsuarioModificacion(usuario);
+        presupuesto.setFechaModificacion(LocalDateTime.now());
+
+        presupuesto = presupuestoRepository.save(presupuesto);
+
+        return convertirAResponseConDetalles(presupuesto);
     }
 
-    @Override
-    public PresupuestoResponse cerrarPresupuesto(Long id) {
-        // Implementación básica - la completaremos después
-        throw new UnsupportedOperationException("Método no implementado aún");
-    }
 
 }

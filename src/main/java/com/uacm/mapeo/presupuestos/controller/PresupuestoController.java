@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/presupuestos")
@@ -61,4 +62,36 @@ public class PresupuestoController {
         presupuestoService.eliminarPresupuesto(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}/aprobar")
+    public ResponseEntity<PresupuestoResponse> aprobarPresupuesto(
+            @PathVariable Long id,
+            @RequestHeader("Usuario") String usuario) {
+
+        PresupuestoResponse response = presupuestoService.aprobarPresupuesto(id, usuario);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{id}/rechazar")
+    public ResponseEntity<PresupuestoResponse> rechazarPresupuesto(
+            @PathVariable Long id,
+            @RequestHeader("Usuario") String usuario,
+            @RequestBody Map<String, String> body) {
+
+        String motivo = body.get("motivo");
+        PresupuestoResponse response = presupuestoService.rechazarPresupuesto(id, usuario, motivo);
+        return ResponseEntity.ok(response);
+    }
+
+    // Cerrar (usuario en header)
+    @PostMapping("/{id}/cerrar")
+    public ResponseEntity<PresupuestoResponse> cerrarPresupuesto(
+            @PathVariable Long id,
+            @RequestHeader("Usuario") String usuario) {
+
+        PresupuestoResponse response = presupuestoService.cerrarPresupuesto(id, usuario);
+        return ResponseEntity.ok(response);
+    }
+
+
 }

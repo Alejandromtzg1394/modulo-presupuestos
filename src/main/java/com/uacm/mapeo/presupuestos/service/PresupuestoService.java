@@ -22,6 +22,6 @@ public interface PresupuestoService {
 
     // Acciones de workflow (para después)
     PresupuestoResponse aprobarPresupuesto(Long id, String usuarioAprobador);
-    PresupuestoResponse rechazarPresupuesto(Long id, String motivo);
-    PresupuestoResponse cerrarPresupuesto(Long id);
+    PresupuestoResponse rechazarPresupuesto(Long id, String usuario, String motivo);
+    PresupuestoResponse cerrarPresupuesto(Long id, String usuario);
 }
